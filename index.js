@@ -1,7 +1,5 @@
 const express = require("express"),
   app = express(),
-  { Readable } = require("stream"),
-  { createReadStream } = require("fs"),
   polly = require("./polly");
 
 app.use(express.json());
@@ -16,7 +14,10 @@ app.get("/", (req, res) => {
       OutputFormat: "mp3",
     },
     (err, data) => {
-      if (err) return res.status(500).json({});
+      if (err) {
+        console.error(err);
+        return res.status(500).json({});
+      }
       if (!data.AudioStream instanceof Buffer) return res.status(500).json({});
 
       res.set("Content-Type", "audio/mpeg");
